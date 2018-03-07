@@ -1,4 +1,5 @@
-﻿using Microsoft.ProjectOxford.Face;
+﻿using ClosedCapt2.Service;
+using Microsoft.ProjectOxford.Face;
 using Microsoft.ProjectOxford.Face.Contract;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Bing.Speech;
 
 namespace ClosedCapt2.Controllers
 {
@@ -17,6 +19,14 @@ namespace ClosedCapt2.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        public async Task<JsonResult> SpeechRecogAsync()
+        {
+            var filePath = Server.MapPath("~/Audio/1.wav");
+            var converter = new Speech();
+            await new Speech().Run(filePath, "it-IT");
+            return Json(true,JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult About()
@@ -57,5 +67,7 @@ namespace ClosedCapt2.Controllers
                 }
             }
         }
+
+
     }
 }

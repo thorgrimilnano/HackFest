@@ -9,7 +9,6 @@
     Captin' Close
 </h1>
 
-
 <div id="container">
     <div>
         <span>Step 1.</span>
@@ -21,14 +20,24 @@
 
     <div>
         <span>Step 2.</span>
-        <button id="record" disabled>Start Translating</button>
+        <button id="record" disabled>Start Translating</button>        
     </div>
     <div>
         <span>Step 3.</span>
         <button id="play" disabled>Play</button> @*DEBUG*@
-        <button id="download" disabled>Download Recording</button>
+        <button id="download" disabled>Download Recording</button>       
     </div>
-
+    <div class="translation"></div>
 </div>
 
 <script src="~/Scripts/site.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url: '/GetTranslation',
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            $(".translation").html=data
+        }
+    });
+</script>
