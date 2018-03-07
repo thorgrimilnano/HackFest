@@ -1,4 +1,5 @@
-﻿using Microsoft.ProjectOxford.Face;
+﻿using ClosedCapt2.Models;
+using Microsoft.ProjectOxford.Face;
 using Microsoft.ProjectOxford.Face.Contract;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ namespace ClosedCapt2.Controllers
 
         public ActionResult Index()
         {
+            var transcript = new Transcipt();
+            transcript.CreateNewTranscript(1);
+
             return View();
         }
 
