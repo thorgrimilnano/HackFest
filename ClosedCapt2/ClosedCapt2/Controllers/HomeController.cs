@@ -26,6 +26,7 @@ namespace ClosedCapt2.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<JsonResult> SpeechRecogAsync()
         {
             var filePath = Server.MapPath("~/Audio/1.wav");

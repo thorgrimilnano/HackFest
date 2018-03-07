@@ -28,11 +28,13 @@ var recordButton = document.querySelector('button#record');
 var playButton = document.querySelector('button#play');
 var downloadButton = document.querySelector('button#download');
 var identifyButton = document.querySelector('button#identify');
+var voicerecog = document.querySelector('button#voicerecog');
 
 recordButton.onclick = toggleRecording;
 playButton.onclick = play;
 downloadButton.onclick = download;
 identifyButton.onclick = identifySpeaker;
+voicerecog.onclick = voiceRecog;
 
 // window.isSecureContext could be used for Chrome
 var isSecureOrigin = location.protocol === 'https:' ||
@@ -198,4 +200,11 @@ function download() {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
     }, 100);
+}
+
+function voiceRecog() {
+    $.ajax({
+        type: "POST",
+        url: "/Home/SpeechRecogAsync"
+    });
 }

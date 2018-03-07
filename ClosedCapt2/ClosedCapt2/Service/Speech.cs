@@ -1,4 +1,5 @@
-﻿using Microsoft.Bing.Speech;
+﻿using ClosedCapt2.Models;
+using Microsoft.Bing.Speech;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,11 @@ namespace ClosedCapt2.Service
 {
     public class Speech
     {
-        
+        public Speech() {
+            transcript = new Transcipt();
+            transcript.CreateNewTranscript(99);
+        }
+        private Transcipt transcript;
         /// <summary>
         /// The long dictation URL
         /// </summary>
@@ -40,12 +45,7 @@ namespace ClosedCapt2.Service
         /// </returns>
         public Task OnPartialResult(RecognitionPartialResult args)
         {
-            Console.WriteLine("--- Partial result received by OnPartialResult ---");
-
-            // Print the partial response recognition hypothesis.
-            Console.WriteLine(args.DisplayText);
-
-            Console.WriteLine();
+            transcript.AppendToTranscript(99, args.DisplayText);
 
             return CompletedTask;
         }
@@ -60,22 +60,12 @@ namespace ClosedCapt2.Service
         public Task OnRecognitionResult(RecognitionResult args)
         {
             var response = args;
-            Console.WriteLine();
-
-            Console.WriteLine("--- Phrase result received by OnRecognitionResult ---");
-
-            // Print the recognition status.
-            Console.WriteLine("***** Phrase Recognition Status = [{0}] ***", response.RecognitionStatus);
+            
             if (response.Phrases != null)
-            {
-                foreach (var result in response.Phrases)
-                {
-                    // Print the recognition phrase display text.
-                    Console.WriteLine("{0} (Confidence:{1})", result.DisplayText, result.Confidence);
-                }
+            {                
+                transcript.AppendToTranscript(99, response.Phrases[0].DisplayText);
             }
 
-            Console.WriteLine();
             return CompletedTask;
         }
 
