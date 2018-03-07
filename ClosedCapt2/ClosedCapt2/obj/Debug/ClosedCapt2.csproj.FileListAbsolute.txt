@@ -55,7 +55,6 @@ C:\HackFest\ClosedCapt2\ClosedCapt2\bin\Microsoft.AI.DependencyCollector.xml
 C:\HackFest\ClosedCapt2\ClosedCapt2\bin\Microsoft.AI.ServerTelemetryChannel.xml
 C:\HackFest\ClosedCapt2\ClosedCapt2\bin\Microsoft.AI.WindowsServer.xml
 C:\HackFest\ClosedCapt2\ClosedCapt2\bin\Microsoft.AI.Web.xml
-C:\HackFest\ClosedCapt2\ClosedCapt2\obj\Debug\ClosedCapt2.csprojResolveAssemblyReference.cache
 C:\HackFest\ClosedCapt2\ClosedCapt2\obj\Debug\ClosedCapt2.csproj.CoreCompileInputs.cache
 C:\HackFest\ClosedCapt2\ClosedCapt2\obj\Debug\ClosedCapt2.dll
 C:\HackFest\ClosedCapt2\ClosedCapt2\obj\Debug\ClosedCapt2.pdb

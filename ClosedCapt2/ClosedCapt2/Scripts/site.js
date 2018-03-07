@@ -17,6 +17,7 @@ var identifiedUser = false;
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
 var mediaRecorder;
+var imageCapture;
 var recordedBlobs;
 var sourceBuffer;
 
@@ -52,6 +53,10 @@ function handleSuccess(stream) {
     console.log('getUserMedia() got stream: ', stream);
     window.stream = stream;
     gumVideo.srcObject = stream;
+
+    let mediaStreamTrack = stream.getVideoTracks()[0];
+    imageCapture = new ImageCapture(mediaStreamTrack);
+    console.log(imageCapture);
 }
 
 function handleError(error) {
@@ -96,14 +101,41 @@ function toggleRecording() {
         identifyButton.disabled = false;
     }
 }
-function identifySpeaker() {
-    recordButton.disabled = false;
 
+function identifySpeaker() {
+    var img;
+
+    imageCapture.grabFrame()
+        .then(function (imageBitmap) {
+            console.log('Grabbed frame:', imageBitmap);
+            var c = document.getElementById("canvas");
+
+            var ctx = c.getContext("2d");
+            ctx.drawImage(imageBitmap, 0, 0);
+
+            var image = c.toDataURL("image/png");
+            image = image.replace('data:image/png;base64,', '');
+
+            $.ajax({
+                 type: 'POST',
+                 url: "Home/IdentifyAsync",
+                 data: '{ "imageData" : "' + image + '" }',
+                 contentType: 'application/json; charset=utf-8',
+                 dataType: 'json',
+                 success: function (msg) {
+                     console.log(msg);
+
+                     identifiedUser = 1; //TODO figure this out
+                 },
+                 error: function (msg) {
+                     console.log(msg);
+                 }
+             });
+        });
 
 }
 
-function startRecording() {
-    recordedBlobs = [];
+function createMediaRecorder() {
     var options = { mimeType: 'video/webm;codecs=vp9' };
     if (!MediaRecorder.isTypeSupported(options.mimeType)) {
         console.log(options.mimeType + ' is not Supported');
@@ -126,6 +158,13 @@ function startRecording() {
         return;
     }
     console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+}
+
+function startRecording() {
+    recordedBlobs = [];
+
+    createMediaRecorder();
+
     recordButton.textContent = 'Stop Recording';
     playButton.disabled = true;
     downloadButton.disabled = true;

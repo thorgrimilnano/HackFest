@@ -211,6 +211,19 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Ben\WIN_20180307_09_51_26_Pro.jpg" />
+    <Content Include="Images\Ben\WIN_20180307_09_51_32_Pro.jpg" />
+    <Content Include="Images\Ben\WIN_20180307_09_51_45_Pro.jpg" />
+    <Content Include="Images\Ben\WIN_20180307_09_51_50_Pro.jpg" />
+    <Content Include="Images\Ben\WIN_20180307_09_51_54_Pro.jpg" />
+    <Content Include="Images\Captain.gif" />
+    <Content Include="Images\Darrell\PIXECT-20180306164043.jpg" />
+    <Content Include="Images\Darrell\PIXECT-20180306164116.jpg" />
+    <Content Include="Images\Eugene\Photo on 3-7-18 at 9.12 AM #2.jpeg" />
+    <Content Include="Images\Eugene\Photo on 3-7-18 at 9.12 AM #3.jpeg" />
+    <Content Include="Images\Eugene\Photo on 3-7-18 at 9.12 AM #4.jpeg" />
+    <Content Include="Images\Eugene\Photo on 3-7-18 at 9.12 AM #5.jpeg" />
+    <Content Include="Images\Eugene\Photo on 3-7-18 at 9.12 AM.jpg" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -245,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\Ciro\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
