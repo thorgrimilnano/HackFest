@@ -17,8 +17,9 @@ namespace ClosedCapt2.Controllers
 
         public ActionResult Index()
         {
-            var transcript = new Transcipt();
-            transcript.CreateNewTranscript(1);
+            //var transcript = new Transcipt();
+            
+            //transcript.AppendToTranscript(10, "This is a another test.");
 
             return View();
         }
@@ -46,6 +47,35 @@ namespace ClosedCapt2.Controllers
             var filePath = "~/images/Darrell/";
             var task = TrainFacialRecognizitionAsync(personGroupId, personGroupName, filePath);
             task.Start();
+
+        }
+
+        [HttpGet]
+        public JsonResult Identify()
+        {
+            var FRId = "group4Eugene";
+            var speaker = new Speaker(FRId);
+            speaker.GetSpeaker();
+
+            return Json(speaker, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult StartStreaming(int session)
+        {
+            var transcript = new Transcipt();
+            transcript.CreateNewTranscript(session);
+
+            return Json(transcript, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public void SendAudioData(object data)
+        {
+            //Send to translater
+
+            //Send to speech to text
+
 
         }
 

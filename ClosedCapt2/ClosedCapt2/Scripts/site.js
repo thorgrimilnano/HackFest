@@ -19,6 +19,7 @@ mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
 var mediaRecorder, audioRecorder;
 var recordedBlobs;
 var sourceBuffer;
+var speaker, transcript;
 
 var gumVideo = document.querySelector('video#gum');
 var recordedAudio = document.querySelector('audio#recorded');
@@ -107,6 +108,10 @@ function toggleRecording() {
 function identifySpeaker() {
     recordButton.disabled = false;
 
+    $.get("Home/Identify", function (data) {
+        speaker = data;
+        console.log(speaker)
+    })
 
 }
 
@@ -148,6 +153,11 @@ function startRecording() {
     audioRecorder.ondataavailable = handleAudioDataAvailable;
     audioRecorder.start(10); // collect 10ms of data
     console.log('MediaRecorder started', mediaRecorder);
+
+    //Initialize a transcript
+    $.get('Home/StartStreaming', {session : 20}, function (data) {
+        transcript = data
+    })
 }
 
 function stopRecording() {
