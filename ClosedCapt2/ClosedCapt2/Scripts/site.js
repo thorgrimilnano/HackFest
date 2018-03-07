@@ -116,7 +116,7 @@ function toggleRecording() {
 function identifySpeaker() {
     var img;
 
-    $.get("Home/Identify", function (data) {
+    $.get("Home/Identify", { userId: identifiedUser.PersonId }, function (data) {
         speaker = data;
         console.log(speaker)
     })

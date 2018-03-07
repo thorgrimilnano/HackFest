@@ -104,10 +104,9 @@ namespace ClosedCapt2.Controllers
             await faceServiceClient.TrainPersonGroupAsync(personGroupId);
 }
         [HttpGet]
-        public JsonResult Identify()
+        public JsonResult Identify(string userId)
         {
-            var FRId = "group4Eugene";
-            var speaker = new Speaker(FRId);
+            var speaker = new Speaker(userId);
             speaker.GetSpeaker();
 
 
