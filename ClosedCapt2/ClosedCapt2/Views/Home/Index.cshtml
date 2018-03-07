@@ -9,8 +9,7 @@
     Captin' Close
 </h1>
 
-
-<div id="container">
+<button id="container">
     <div>
         <span>Step 1.</span>
         <button id="identify">Identify</button>
@@ -18,18 +17,20 @@
     </div>
 
     <video id="gum" autoplay muted></video>
-    <video id="recorded" loop controls></video> @*DEBUG*@
+    <audio id="recorded" loop controls></audio> @*DEBUG*@
 
     <div>
         <span>Step 2.</span>
-        <button id="record" disabled>Start Translating</button>
+        <button id="record" disabled>Start Translating</button>        
     </div>
     <div>
         <span>Step 3.</span>
         <button id="play" disabled>Play</button> @*DEBUG*@
-        <button id="download" disabled>Download Recording</button>
+        <button id="download" disabled>Download Recording</button>       
     </div>
-
+    <button id="voicerecog">Recognize Voice</button>
 </div>
 
 <script src="~/Scripts/site.js"></script>
+
+

@@ -16,23 +16,26 @@ var identifiedUser = false;
 
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
-var mediaRecorder;
+var mediaRecorder, audioRecorder;
 var imageCapture;
 var recordedBlobs;
 var sourceBuffer;
+var speaker, transcript;
 
 var gumVideo = document.querySelector('video#gum');
-var recordedVideo = document.querySelector('video#recorded');
+var recordedAudio = document.querySelector('audio#recorded');
 
 var recordButton = document.querySelector('button#record');
 var playButton = document.querySelector('button#play');
 var downloadButton = document.querySelector('button#download');
 var identifyButton = document.querySelector('button#identify');
+var voicerecog = document.querySelector('button#voicerecog');
 
 recordButton.onclick = toggleRecording;
 playButton.onclick = play;
 downloadButton.onclick = download;
 identifyButton.onclick = identifySpeaker;
+voicerecog.onclick = voiceRecog;
 
 // window.isSecureContext could be used for Chrome
 var isSecureOrigin = location.protocol === 'https:' ||
@@ -72,13 +75,21 @@ function handleSourceOpen(event) {
     console.log('Source buffer: ', sourceBuffer);
 }
 
-recordedVideo.addEventListener('error', function (ev) {
+recordedAudio.addEventListener('error', function (ev) {
     console.error('MediaRecording.recordedMedia.error()');
-    alert('Your browser can not play\n\n' + recordedVideo.src
+    alert('Your browser can not play\n\n' + recordedAudio.src
         + '\n\n media clip. event: ' + JSON.stringify(ev));
 }, true);
 
 function handleDataAvailable(event) {
+    if (event.data && event.data.size > 0) {
+        recordedBlobs.push(event.data);
+
+        //TODO split and send blob to places
+    }
+}
+
+function handleAudioDataAvailable(event) {
     if (event.data && event.data.size > 0) {
         recordedBlobs.push(event.data);
 
@@ -91,11 +102,11 @@ function handleStop(event) {
 }
 
 function toggleRecording() {
-    if (recordButton.textContent === 'Start Recording') {
+    if (recordButton.textContent === 'Start Translating') {
         startRecording();
     } else {
         stopRecording();
-        recordButton.textContent = 'Start Recording';
+        recordButton.textContent = 'Start Translating';
         playButton.disabled = false;
         downloadButton.disabled = false;
         identifyButton.disabled = false;
@@ -105,6 +116,10 @@ function toggleRecording() {
 function identifySpeaker() {
     var img;
 
+    $.get("Home/Identify", function (data) {
+        speaker = data;
+        console.log(speaker)
+    })
     imageCapture.grabFrame()
         .then(function (imageBitmap) {
             console.log('Grabbed frame:', imageBitmap);
@@ -137,6 +152,7 @@ function identifySpeaker() {
 
 function createMediaRecorder() {
     var options = { mimeType: 'video/webm;codecs=vp9' };
+    var audioOptions = { mimeType: 'audio/webm' };
     if (!MediaRecorder.isTypeSupported(options.mimeType)) {
         console.log(options.mimeType + ' is not Supported');
         options = { mimeType: 'video/webm;codecs=vp8' };
@@ -151,6 +167,7 @@ function createMediaRecorder() {
     }
     try {
         mediaRecorder = new MediaRecorder(window.stream, options);
+        audioRecorder = new MediaRecorder(window.stream, audioOptions);
     } catch (e) {
         console.error('Exception while creating MediaRecorder: ' + e);
         alert('Exception while creating MediaRecorder: '
@@ -170,30 +187,39 @@ function startRecording() {
     downloadButton.disabled = true;
     identifyButton.disable = true;
     mediaRecorder.onstop = handleStop;
-    mediaRecorder.ondataavailable = handleDataAvailable;
+    //mediaRecorder.ondataavailable = handleDataAvailable;
     mediaRecorder.start(10); // collect 10ms of data
+
+    audioRecorder.onstop = handleStop;
+    audioRecorder.ondataavailable = handleAudioDataAvailable;
+    audioRecorder.start(10); // collect 10ms of data
     console.log('MediaRecorder started', mediaRecorder);
+
+    //Initialize a transcript
+    $.get('Home/StartStreaming', {session : 20}, function (data) {
+        transcript = data
+    })
 }
 
 function stopRecording() {
     mediaRecorder.stop();
     console.log('Recorded Blobs: ', recordedBlobs);
-    recordedVideo.controls = true;
+    recordedAudio.controls = true;
 }
 
 function play() {
-    var superBuffer = new Blob(recordedBlobs, { type: 'video/webm' });
-    recordedVideo.src = window.URL.createObjectURL(superBuffer);
+    var superBuffer = new Blob(recordedBlobs, { type: 'audio/webm' });
+    recordedAudio.src = window.URL.createObjectURL(superBuffer);
     // workaround for non-seekable video taken from
     // https://bugs.chromium.org/p/chromium/issues/detail?id=642012#c23
-    recordedVideo.addEventListener('loadedmetadata', function () {
-        if (recordedVideo.duration === Infinity) {
-            recordedVideo.currentTime = 1e101;
-            recordedVideo.ontimeupdate = function () {
-                recordedVideo.currentTime = 0;
-                recordedVideo.ontimeupdate = function () {
-                    delete recordedVideo.ontimeupdate;
-                    recordedVideo.play();
+    recordedAudio.addEventListener('loadedmetadata', function () {
+        if (recordedAudio.duration === Infinity) {
+            recordedAudio.currentTime = 1e101;
+            recordedAudio.ontimeupdate = function () {
+                recordedAudio.currentTime = 0;
+                recordedAudio.ontimeupdate = function () {
+                    delete recordedAudio.ontimeupdate;
+                    recordedAudio.play();
                 };
             };
         }
@@ -213,4 +239,11 @@ function download() {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
     }, 100);
+}
+
+function voiceRecog() {
+    $.ajax({
+        type: "POST",
+        url: "/Home/SpeechRecogAsync"
+    });
 }

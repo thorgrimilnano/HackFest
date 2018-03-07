@@ -1,4 +1,6 @@
-﻿using Microsoft.ProjectOxford.Face;
+﻿using ClosedCapt2.Models;
+using ClosedCapt2.Service;
+using Microsoft.ProjectOxford.Face;
 using Microsoft.ProjectOxford.Face.Contract;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Bing.Speech;
 
 namespace ClosedCapt2.Controllers
 {
@@ -19,7 +22,20 @@ namespace ClosedCapt2.Controllers
 
         public ActionResult Index()
         {
+            //var transcript = new Transcipt();
+            
+            //transcript.AppendToTranscript(10, "This is a another test.");
+
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SpeechRecogAsync()
+        {
+            var filePath = Server.MapPath("~/Audio/1.wav");
+            var converter = new Speech();
+            await new Speech().Run(filePath, "it-IT");
+            return Json(true,JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult About()
@@ -86,12 +102,41 @@ namespace ClosedCapt2.Controllers
         public async Task TrainData()
         {
             await faceServiceClient.TrainPersonGroupAsync(personGroupId);
+}
+        [HttpGet]
+        public JsonResult Identify()
+        {
+            var FRId = "group4Eugene";
+            var speaker = new Speaker(FRId);
+            speaker.GetSpeaker();
+
+
+            return Json(speaker, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult StartStreaming(int session)
+        {
+            var transcript = new Transcipt();
+            transcript.CreateNewTranscript(session);
+
+            return Json(transcript, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public void SendAudioData(object data)
+        {
+            //Send to translater
+
+            //Send to speech to text
+
 
         }
-        
-        public async Task TrainFacialRecognizitionAsync(string personGroupId, string personName, string filePath)
+
+
+        public async Task TrainFacialRecognizitionAsync(string personGroupId, string personGroupName, string filePath)
         {
-            CreatePersonResult person = await faceServiceClient.CreatePersonAsync(personGroupId, personName);
+            CreatePersonResult person = await faceServiceClient.CreatePersonAsync(personGroupId, personGroupName);
             foreach (string imagePath in Directory.GetFiles(filePath))
             {
                 using (Stream s = System.IO.File.OpenRead(imagePath))
@@ -100,5 +145,7 @@ namespace ClosedCapt2.Controllers
                 }
             }
         }
+
+
     }
 }
