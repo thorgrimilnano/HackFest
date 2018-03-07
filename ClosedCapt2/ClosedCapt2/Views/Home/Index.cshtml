@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<link rel="stylesheet" href="~/Content/Site.css">
+
+
+<h1>
+    <img class="captain" src="~/images/Captain.gif" />
+    Captin' Close
+</h1>
+
+
+<div id="container">
+    <div>
+        <span>Step 1.</span>
+        <button id="identify">Identify</button>
+    </div>
+
+    <video id="gum" autoplay muted></video>
+    <video id="recorded" loop controls></video> @*DEBUG*@
+
+    <div>
+        <span>Step 2.</span>
+        <button id="record" disabled>Start Translating</button>
+    </div>
+    <div>
+        <span>Step 3.</span>
+        <button id="play" disabled>Play</button> @*DEBUG*@
+        <button id="download" disabled>Download Recording</button>
+    </div>
+
+</div>
+
+<script src="~/Scripts/site.js"></script>
