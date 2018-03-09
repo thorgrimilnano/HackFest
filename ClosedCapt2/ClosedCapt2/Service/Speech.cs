@@ -27,7 +27,7 @@ namespace ClosedCapt2.Service
         /// </summary>
         private static readonly Task CompletedTask = Task.FromResult(true);
 
-        private static readonly string key = "a981cc903f61446c861d5ef64c40a74f";
+        private static readonly string key = "993d4430aa4f40198abc2f0020174c0b";
 
         /// <summary>
         /// Cancellation token used to stop sending the audio.
